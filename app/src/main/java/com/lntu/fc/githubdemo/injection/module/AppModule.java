@@ -1,6 +1,8 @@
 package com.lntu.fc.githubdemo.injection.module;
 
 import com.lntu.fc.githubdemo.app.GithubApplication;
+import com.lntu.fc.githubdemo.utils.AppApi;
+import com.lntu.fc.githubdemo.utils.AppService;
 
 import javax.inject.Singleton;
 
@@ -8,7 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Application的module，负责提供全局变量
+ * @author Application的module，负责提供全局变量
  * Created by FengChen on 2019/8/31.
  */
 @Module
@@ -19,9 +21,18 @@ public class AppModule {
         mApplication = application;
     }
 
-    @Singleton
+
     @Provides
+    @Singleton
     GithubApplication providerApplication() {
         return mApplication;
+    }
+
+
+    @Provides
+    @Singleton
+    AppApi provideAppApi() {
+        AppService.init();
+        return AppService.getApi();
     }
 }

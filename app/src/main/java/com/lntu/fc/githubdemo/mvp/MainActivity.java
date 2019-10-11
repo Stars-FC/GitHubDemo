@@ -5,43 +5,45 @@ import android.util.Log;
 
 import com.lntu.fc.githubdemo.R;
 import com.lntu.fc.githubdemo.adapter.RepoListAdapter;
-import com.lntu.fc.githubdemo.mvp.bean.Repo;
 import com.lntu.fc.githubdemo.injection.component.DaggerMainComponent;
 import com.lntu.fc.githubdemo.injection.module.MainModule;
-import com.lntu.fc.githubdemo.mvp.presenter.MainPresenterImpl;
+import com.lntu.fc.githubdemo.mvp.base.BaseActivity;
+import com.lntu.fc.githubdemo.mvp.bean.Repo;
 import com.lntu.fc.githubdemo.mvp.contract.MainContract;
+import com.lntu.fc.githubdemo.mvp.presenter.MainPresenterImpl;
 
 import javax.inject.Inject;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
-    private Unbinder mBind;
-
-    @Inject
-    MainPresenterImpl mPresenter;
+/**
+ * @author fengchen
+ */
+public class MainActivity extends BaseActivity<MainPresenterImpl> implements MainContract.View {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-        mBind = ButterKnife.bind(this);
+    @Override
+    protected void initData() {
+        mPresenter.loadGitHub();
+    }
 
+
+    @Override
+    protected void initInjects() {
         DaggerMainComponent.builder()
                 .mainModule(new MainModule(this))
+                .appComponent(getAppComponent())
                 .build()
                 .inject(this);
-
-        mPresenter.loadGitHub();
     }
 
     @Override
@@ -64,6 +66,5 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBind.unbind();
     }
 }

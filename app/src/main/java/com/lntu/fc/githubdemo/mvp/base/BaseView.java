@@ -1,7 +1,7 @@
 package com.lntu.fc.githubdemo.mvp.base;
 
 /**
- * Created by FengChen on 2019/8/31.
+ * @author Created by FengChen on 2019/8/31.
  */
 public interface BaseView {
     /**
